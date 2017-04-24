@@ -1,0 +1,8 @@
+{
+  "name": "quail",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "airtable": "^0.4.5"
+  }
+}
