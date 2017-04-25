@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "airtable": "^0.4.5"
+    "airtable": "^0.4.5",
+    "node-fetch": "^1.6.3"
   }
 }
