@@ -31,8 +31,10 @@ fetch(domainResource)
     }).eachPage((records, fetchNextPage) => {
       if (records.length != 0) { return; }
 
-      let newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces']);
-      newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}]
+      let newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces', 'PropertyType']);
+      newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}];
+      newListing['CreatedAt'] = new Date();
+      newListing['Link'] = `https://domain.com.au/${listing['AdId']}`;
 
       base('Table').create(newListing, (err, record) => {
           if (err) { console.error(err); return; }
