@@ -12,7 +12,7 @@ const domainParams = { sub: 'Point Cook', state: 'VIC', pcodes: '3030' }
 const domainResource = domainAddress + '?' + querystring.stringify(domainParams)
 
 fetch(domainResource)
-.then((response) => {
+.then(response => {
   if (response.ok) {
     return response;
   }
@@ -22,19 +22,19 @@ fetch(domainResource)
 .then(json => {
   const listings = json['ListingResults']['Listings'];
 
-  listings.forEach((listing) => {
+  listings.forEach(listing => {
     base('Table').select({
       fields: ['AdId'],
       maxRecords: 1,
       pageSize: 1,
       filterByFormula: `{AdId} = "${listing['AdId']}"`
-    }).eachPage(function page(records, fetchNextPage) {
+    }).eachPage((records, fetchNextPage) => {
       if (records.length != 0) { return; }
 
       let newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces']);
       newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}]
 
-      base('Table').create(newListing, function(err, record) {
+      base('Table').create(newListing, (err, record) => {
           if (err) { console.error(err); return; }
           console.log(record.getId());
       });
