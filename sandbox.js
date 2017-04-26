@@ -7,9 +7,10 @@ const _ = require('lodash');
 
 const base = new airtable({apiKey: ''}).base('appMjKBG3KMmA2ihh');
 
-const domainAddress = 'https://rest.domain.com.au/searchservice.svc/search'
-const domainParams = { sub: 'Point Cook', state: 'VIC', pcodes: '3030' }
-const domainResource = domainAddress + '?' + querystring.stringify(domainParams)
+const domainAddress = 'https://rest.domain.com.au/searchservice.svc/search';
+const domainParams = { sub: 'Point Cook', state: 'VIC', pcodes: '3030' };
+const domainResource = domainAddress + '?' + querystring.stringify(domainParams);
+const tableName = 'Table';
 
 fetch(domainResource)
 .then(response => {
@@ -23,7 +24,7 @@ fetch(domainResource)
   const listings = json['ListingResults']['Listings'];
 
   listings.forEach(listing => {
-    base('Table').select({
+    base(tableName).select({
       fields: ['AdId'],
       maxRecords: 1,
       pageSize: 1,
@@ -36,15 +37,13 @@ fetch(domainResource)
       newListing['CreatedAt'] = new Date();
       newListing['Link'] = `https://domain.com.au/${listing['AdId']}`;
 
-      base('Table').create(newListing, (err, record) => {
+      base(tableName).create(newListing, (err, record) => {
           if (err) { console.error(err); return; }
           console.log(record.getId());
       });
     }, function done(err) {
       if (err) { console.error(err); return; }
     })
-
-
 
   })
 
