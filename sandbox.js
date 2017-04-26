@@ -2,11 +2,49 @@
 
 const querystring = require('querystring');
 const fetch = require('node-fetch');
+const airtable = require('airtable');
+const _ = require('lodash');
+
+const base = new airtable({apiKey: ''}).base('appMjKBG3KMmA2ihh');
 
 const domainAddress = 'https://rest.domain.com.au/searchservice.svc/search'
 const domainParams = { sub: 'Point Cook', state: 'VIC', pcodes: '3030' }
 const domainResource = domainAddress + '?' + querystring.stringify(domainParams)
 
 fetch(domainResource)
-.then(res => res.json())
-.then(json => console.log(json));
+.then((response) => {
+  if (response.ok) {
+    return response;
+  }
+  return Promise.reject(new Error(`Failed to fetch ${response.url}: ${response.status} ${response.statusText}`));
+})
+.then(response => response.json())
+.then(json => {
+  const listings = json['ListingResults']['Listings'];
+
+  listings.forEach((listing) => {
+    base('Table').select({
+      fields: ['AdId'],
+      maxRecords: 1,
+      pageSize: 1,
+      filterByFormula: `{AdId} = "${listing['AdId']}"`
+    }).eachPage(function page(records, fetchNextPage) {
+      if (records.length != 0) { return; }
+
+      var newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces']);
+      newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}]
+
+      base('Table').create(newListing, function(err, record) {
+          if (err) { console.error(err); return; }
+          console.log(record.getId());
+      });
+    }, function done(err) {
+      if (err) { console.error(err); return; }
+    })
+
+
+
+  })
+
+  // console.log(listings);
+});
