@@ -31,7 +31,7 @@ fetch(domainResource)
     }).eachPage(function page(records, fetchNextPage) {
       if (records.length != 0) { return; }
 
-      var newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces']);
+      let newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces']);
       newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}]
 
       base('Table').create(newListing, function(err, record) {
