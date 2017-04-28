@@ -1,6 +1,6 @@
 # quail
 
-Quail is ...
+Quail is a [Serverless](https://serverless.com) app that fetches new properties for sale from [Domain](https://www.domain.com.au) and save them to [Airtable](https://airtable.com).
 
 ### Background
 
@@ -18,7 +18,9 @@ Create a service by running: `serverless create --template aws-nodejs --path hel
 
 ### Project
 
-...
+Quail is a Serverless app that fetches new properties for sale from Domain once a day and save them to an Airtable spreadsheet. The main user interface is through an Airtable document as shown below.
+
+![Screenshot](https://raw.githubusercontent.com/donny/quail/master/screenshot.png)
 
 ### Implementation
 
