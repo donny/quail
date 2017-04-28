@@ -24,8 +24,53 @@ Quail is a Serverless app that fetches new properties for sale in [Point Cook, V
 
 ### Implementation
 
-...
+Quail is written in Node.js running on [AWS Lambda](https://aws.amazon.com/lambda/details/) using the Serverless framework to manage the underlying AWS infrastructure. The regular scheduled job is implemented using [Scheduled Events](http://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html). The main Serverless configuration for Quail can be found below:
+
+```yaml
+functions:
+  status:
+    handler: handler.status
+    events:
+      - schedule: rate(1 day)
+      - http:
+          path: status
+          method: get
+```
+
+The main section of the implementation file, [`handler.js`](https://github.com/donny/quail/blob/master/handler.js), is listed below:
+
+```javascript
+listings.forEach(listing => {
+  base(tableName).select({
+    fields: ['AdId'],
+    maxRecords: 1,
+    pageSize: 1,
+    filterByFormula: `{AdId} = "${listing['AdId']}"`
+  }).eachPage((records, fetchNextPage) => {
+    if (records.length != 0) { return; }
+
+    let newListing = _.pick(listing, ['AdId', 'DisplayableAddress', 'DisplayPrice', 'Bedrooms', 'Bathrooms', 'Carspaces', 'PropertyType']);
+    newListing['Image'] = [{url: listing['RetinaDisplayThumbUrl']}];
+    newListing['CreatedAt'] = new Date();
+    newListing['Link'] = `https://domain.com.au/${listing['AdId']}`;
+
+    base(tableName).create(newListing, (err, record) => {
+        if (err) { console.error(err); return; }
+    });
+  }, function done(err) {
+    if (err) { console.error(err); return; }
+  })
+});
+```
+
+For each listing, we try to find whether it exists in the document or not (see `select` and `filterByFormula`). If it doesn't exist, it creates a new spreadsheet row (see `newListing`) and appends it (see `create`). The listings are fetched using the following HTTP resource:
+
+```javascript
+const domainAddress = 'https://rest.domain.com.au/searchservice.svc/search'
+const domainParams = { sub: 'Point Cook', state: 'VIC', pcodes: '3030' }
+const domainResource = domainAddress + '?' + querystring.stringify(domainParams)
+```
 
 ### Conclusion
 
-...
+I really like the Serverless Framework. In the past when I build and deploy AWS Lambda functions, I needed to write CloudFormation config files and a few Bash scripts to codify the underlying AWS infrastructure.
