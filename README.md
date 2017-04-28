@@ -18,7 +18,7 @@ Create a service by running: `serverless create --template aws-nodejs --path hel
 
 ### Project
 
-Quail is a Serverless app that fetches new properties for sale from Domain once a day and save them to an Airtable spreadsheet. The main user interface is through an Airtable document as shown below.
+Quail is a Serverless app that fetches new properties for sale in [Point Cook, Victoria](https://en.wikipedia.org/wiki/Point_Cook,_Victoria) from Domain once a day and save them to an Airtable spreadsheet. The main user interface is through an Airtable document as shown below. The user doesn't need to interact with Quail directly. He/she just need to check the Airtable spreadsheet once a day.
 
 ![Screenshot](https://raw.githubusercontent.com/donny/quail/master/screenshot.png)
 
