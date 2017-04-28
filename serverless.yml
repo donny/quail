@@ -58,6 +58,7 @@ functions:
   status:
     handler: handler.status
     events:
+      - schedule: rate(1 hour)
       - http:
           path: status
           method: get
