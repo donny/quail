@@ -73,4 +73,6 @@ const domainResource = domainAddress + '?' + querystring.stringify(domainParams)
 
 ### Conclusion
 
-I really like the Serverless Framework. In the past when I build and deploy AWS Lambda functions, I needed to write CloudFormation config files and a few Bash scripts to codify the underlying AWS infrastructure. But with Serverless, it handles the creation and deletion of the required AWS resources, we just need to concentrate on writing the functions. It's simple and easy! I quite like Airtable, the API is easy to use and it allows us to embed images in the spreadsheet document. Airtable presents an intuitive interface to our real estate data.
+I really like the Serverless Framework. In the past when I build and deploy AWS Lambda functions, I needed to write CloudFormation config files and a few Bash scripts to codify the underlying AWS infrastructure. But with Serverless, it handles the creation and deletion of the required AWS resources, we just need to concentrate on writing the functions. It's simple and easy!
+
+I quite like Airtable, the API is easy to use and it allows us to embed images in the spreadsheet document. Airtable presents an intuitive interface to our real estate data.
